@@ -2,6 +2,7 @@ const uuidv4 = require('uuid/v4');
 
 module.exports = app => {
   const userDB = app.data.userDB;
+  const configDB = app.data.configDB;
   const controller = {};
   const fs = require('fs');
   const bdLocation = "api/data/userDB.json";
@@ -15,6 +16,26 @@ module.exports = app => {
 	fs.writeFile(bdLocation, JSON.stringify(userDB), function (err) {
 		if (err) return console.log(err);
 	});
+  }
+
+  const calcularDistancia = (lat1, lon1, lat2, lon2) =>
+  {
+    var R = 6371;
+    var dLat = toRad(lat2-lat1);
+    var dLon = toRad(lon2-lon1);
+    var lat1 = toRad(lat1);
+    var lat2 = toRad(lat2);
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c;
+    return d;
+  }
+
+  const toRad = (valor) =>
+  {
+      return valor * Math.PI / 180;
   }
   
   const verifyLogin = (email, senha) => {
@@ -105,8 +126,21 @@ module.exports = app => {
 	  response = (index === -1) ? {status:false} : {status:true, user:userDB[index]} 
 	  res.status(200).json(response);
   }
+
   
-  //customerWalletsMock.data.splice(foundCustomerIndex, 1, newCustomer);
+
+  controller.getLocation = (req, res) => {
+    const latLng = req.body;
+
+    console.log("latLng", latLng);
+
+    const distancia = calcularDistancia(latLng.lat,latLng.lng, configDB.lat, configDB.lng);
+
+    console.log("Distancia: " + distancia);
+	
+	res.status(200).json({distancia: distancia});
+  }
+  
 
   return controller;
 }

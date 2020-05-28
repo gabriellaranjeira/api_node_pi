@@ -9,6 +9,9 @@ module.exports = app => {
 	.get(controller.getUser)
 
   app.route('/login')
-	.post(controller.login)
+  .post(controller.login)
+  
+  app.route('/getLocation')
+  .post(controller.getLocation)
 
 }
