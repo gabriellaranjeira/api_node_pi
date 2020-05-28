@@ -3,5 +3,6 @@ module.exports = app => {
 
   app.route('/configuracoes')
     .post(controller.updateConfig)
+	.get(controller.getConfig)
 
 }
