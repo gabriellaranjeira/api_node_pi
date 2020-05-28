@@ -120,7 +120,6 @@ module.exports = app => {
   
   controller.login = (req, res) => {
 	  var response = {};
-	  
 	  var index = verifyLogin(req.body.email, req.body.senha);
 	  console.log(index);
 	  response = (index === -1) ? {status:false} : {status:true, user:userDB[index]} 
