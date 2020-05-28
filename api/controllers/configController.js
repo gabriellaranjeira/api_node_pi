@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = app => {
-  const configDB = app.data.configDB;
+  var configDB = app.data.configDB;
   const controller = {};
   const fs = require('fs');
   const bdLocation = "api/data/configDB.json";
@@ -23,11 +23,14 @@ module.exports = app => {
     } = req.params;
 	
 	console.log("updateConfig");
-	
-	  configDB = req.body;
+	  configDB = {...req.body};
 	  updateInDB();
 	  
 	  res.status(200).json(configDB)
+  }
+  
+  controller.getConfig = (req, res) => {
+	  res.status(200).json(configDB);
   }
   
   return controller;
